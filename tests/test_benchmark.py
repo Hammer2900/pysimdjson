@@ -60,20 +60,15 @@ def pytest_generate_tests(metafunc):
 def _deep(doc):
     # Find the deepest search path into `doc`.
     if isinstance(doc, list):
-        d = dict((i, [i]) for i in range(len(doc)))
+        d = {i: [i] for i in range(len(doc))}
     else:
-        d = dict((k, [k]) for k in doc.keys())
+        d = {k: [k] for k in doc.keys()}
 
-    for k in d:
-        if isinstance(doc[k], dict):
+    for k, v_ in d.items():
+        if isinstance(doc[k], (dict, list)):
             v = _deep(doc[k])
             if v:
-                d[k].extend(v)
-        elif isinstance(doc[k], list):
-            v = _deep(doc[k])
-            if v:
-                d[k].extend(v)
-
+                v_.extend(v)
     keys = sorted(d, key=lambda k: len(d[k]))
     if keys:
         return d[keys[-1]]

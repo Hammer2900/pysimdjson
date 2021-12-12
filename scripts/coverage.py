@@ -297,11 +297,7 @@ class Plugin(CoveragePlugin):
             # none of our business
             return None, None
 
-        if ext in C_FILE_EXTENSIONS:
-            c_file = filename
-        else:
-            c_file = _find_c_source(basename)
-
+        c_file = filename if ext in C_FILE_EXTENSIONS else _find_c_source(basename)
         if c_file is None:
             # a module "pkg/mod.so" can have a source file "pkg/pkg.mod.c"
             package_root = find_root_package_dir(filename)
@@ -534,13 +530,12 @@ class CythonModuleReporter(FileReporter):
         """
         Return the source code of the file as a string.
         """
-        if os.path.exists(self.filename):
-            with open_source_file(self.filename) as f:
-                return f.read()
-        else:
+        if not os.path.exists(self.filename):
             return '\n'.join(
                 (tokens[0][1] if tokens else '')
                 for tokens in self._iter_source_tokens())
+        with open_source_file(self.filename) as f:
+            return f.read()
 
     def source_token_lines(self):
         """
