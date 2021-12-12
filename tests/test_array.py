@@ -36,7 +36,7 @@ def test_array_slicing(parser):
 
     assert list(doc) == [0, 1, 2, 3, 4, 5]
     assert doc[-1] == 5
-    assert doc[0:2] == [0, 1]
+    assert doc[:2] == [0, 1]
     assert doc[::2] == [0, 2, 4]
     assert doc[::-1] == [5, 4, 3, 2, 1, 0]
 
